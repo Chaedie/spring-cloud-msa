@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class FirstServiceController {
 
     @GetMapping("/welcome")
-    private String welcome() {
+    public String welcome() {
         return "Welcome to First Service";
     }
 
     @GetMapping("/message")
-    private String message(@RequestHeader("first-request") String header) {
+    public String message(@RequestHeader("first-request") String header) {
         log.info(header);
         return header;
     }
 
+    @GetMapping("/check")
+    public String check() {
+        return "Hi, there. This is message from First Service.";
+    }
 }

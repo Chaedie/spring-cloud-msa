@@ -16,9 +16,10 @@ public class WebSecurity {
         http.csrf((csrf) -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/actuator/**", "/h2-console/**").permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll());
-        // .anyRequest().permitAll());
+                        .requestMatchers("/health_check", "/actuator/**", "/h2-console/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/users/**")).permitAll()
+                        .anyRequest().permitAll());
+
 
         return http.build();
     }

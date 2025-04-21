@@ -6,7 +6,6 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -19,14 +18,12 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
     @Override
     public GatewayFilter apply(Config config) {
         // Custom Pre Filter
-
-
+        
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
             log.info("Custom Pre filter: request Id -> {}", request.getId());
-
             // Custom Post Filter
             return chain.filter(exchange).then(Mono.fromRunnable(() -> {
                 log.info("Custom Post filter: response Code -> {}", response.getStatusCode());

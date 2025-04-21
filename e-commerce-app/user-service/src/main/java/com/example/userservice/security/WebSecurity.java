@@ -27,6 +27,7 @@ public class WebSecurity {
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/health_check", "/actuator/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/users", "POST").permitAll()
                         // .requestMatchers("/**")
                         // .access(new WebExpressionAuthorizationManager(
                         //         "hasIpAddress('127.0.0.1') or hasIpAddress('::1') or " +
@@ -50,10 +51,10 @@ public class WebSecurity {
     private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(env, userService);
         authenticationFilter.setAuthenticationManager(authenticationManager);
+        authenticationFilter.setFilterProcessesUrl("/login");
 
         return authenticationFilter;
     }
-
 
     @Bean
     public AuthenticationManager getAuthenticationManager(HttpSecurity http) throws Exception {

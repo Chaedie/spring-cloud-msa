@@ -36,3 +36,6 @@ logging:
   level:
     com.example: DEBUG
 
+token:
+  expiration_time: 864000000 # 10days
+  secret: user_token_user_token_user_token_user_token_user_token_user_token

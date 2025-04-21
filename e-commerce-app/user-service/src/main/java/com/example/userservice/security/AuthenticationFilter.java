@@ -30,9 +30,9 @@ import java.util.Date;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final Environment environment;
+    private final Environment env;
     private final UserService userService;
-    
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
@@ -58,5 +58,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String userName = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmail(userName);
+
+        byte[] secretKeyBytes = Base64.getEncoder().encode(env.getProperty("token.secret").getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+        Instant now = Instant.now();
+
+        String token = Jwts.builder()
+                .subject(userDetails.getUserId())
+                .expiration(Date.from(now.plusMillis(
+                        Long.parseLong(env.getProperty("token.expiration_time")))))
+                .issuedAt(Date.from(now))
+                .signWith(secretKey)
+                .compact();
+
+        response.addHeader("token", token);
+        response.addHeader("userId", userDetails.getUserId());
+
+        log.info("Login Success -> token: {}", token);
     }
 }

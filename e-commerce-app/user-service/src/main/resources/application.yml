@@ -49,3 +49,14 @@ management:
     web:
       exposure:
         include: refresh, health, beans, busrefresh
+
+encrypt:
+  #  key: asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfas
+  key-store:
+    location: file://${user.home}/codes/00-msa/spring-cloud-msa/keystore/apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey
+
+#token:
+#  expiration_time: 864000000 # 10days
+#  secret: '{cipher}AQAK0ldwDjULqjAwhCUJ8O0cS5DW9RnJ4fYozA+6D9YdfiK6oVaLABq4qFojtH5XXhgWANHiDIARF2rPleM/DMZGi+qfxPKnQ0Sp51QaSMMhSTSCPpR6YUbNuma5MLzMM+usqX7nghEb9qKIj4mX8rsQw4d7k+q6LgH9IaT01xORGvbfhLKRF1X6RG13it4SNtlGTDf7EVoV2OMG+zJ5ygXzvUb2PidDSTqzKarJ7OkVjgLRkNS/PpUAMU8jVythnz8ADjvavOR0mOuIv6zzZhp/HhqCKZgg/CCLI1e7FMTok6tZfr16m8qsS2Me+tRQIMwiN8A1FfUrwX+FK7eUMN4S6Gfb9Qn3BmMUZWkTLng0a/+u1KI2X4ofpFr/952irJWv1UkGcgmUuYhFpQqBnOulVok6xqsknc9CqvsQSVva+Vo6N4RCCkczts6XFoFdcu6tzRlgKB7KrKqstrXJ/GIK4oZLzrGv78shz4w3V6W88exvMLq6z2sgMgwH9OyF6ypGaNDMcP/9pojwRhaDoqi5'

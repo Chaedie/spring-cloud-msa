@@ -11,6 +11,11 @@ eureka:
 spring:
   application:
     name: gateway-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     gateway:
       #      default-filters:
@@ -24,7 +29,7 @@ spring:
         #          uri: lb://USER-SERVICE
         #          predicates:
         #            - Path=/user-service/**
-        # 로그인
+        # User service - 로그인
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -33,7 +38,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        # 회원가입
+        # User service - 회원가입
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -42,7 +47,16 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        # 나머지 user service 기능
+        # User service - Actuator
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        # User service - 나머지 user service 기능
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -62,6 +76,10 @@ spring:
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/order-service/**
+  config:
+    import: optional:configserver:http://127.0.0.1:8888/
+  profiles:
+    active: prod
 #        - id: first-service
 #          uri: lb://first-service
 #          predicates:
@@ -84,5 +102,11 @@ spring:
 #                preLogger: true
 #                postLogger: true
 
-token:
-  secret: user_token_user_token_user_token_user_token_user_token_user_token
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # httptrace -> httpexchanges
+        include: refresh, health, beans, httpexchanges, busrefresh

@@ -1,6 +1,11 @@
 spring:
   application:
     name: user-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   h2:
     console:
       enabled: true
@@ -15,7 +20,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+  config:
+    import: optional:configserver:http://127.0.0.1:8888/
+  profiles:
+    active: dev
 
 server:
   port: 0 # Random Port
@@ -36,6 +44,8 @@ logging:
   level:
     com.example: DEBUG
 
-token:
-  expiration_time: 864000000 # 10days
-  secret: user_token_user_token_user_token_user_token_user_token_user_token
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh

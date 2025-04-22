@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final Environment env;
     private final RestTemplate restTemplate;
+    private final OrderService orderService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -71,12 +72,16 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        // Using as rest template
-        String orderUrl = String.format(env.getProperty("order_service.url"), userId);
-        ResponseEntity<List<ResponseOrder>> orderListResponse =
-                restTemplate.exchange(orderUrl, HttpMethod.GET, null,
-                        new ParameterizedTypeReference<List<ResponseOrder>>() {
-                        });
+        /* Using as rest template */
+        // String orderUrl = String.format(env.getProperty("order_service.url"), userId);
+        // ResponseEntity<List<ResponseOrder>> orderListResponse =
+        //         restTemplate.exchange(orderUrl, HttpMethod.GET, null,
+        //                 new ParameterizedTypeReference<List<ResponseOrder>>() {
+        //                 });
+
+        /* Using as rest template */
+        ResponseEntity<List<ResponseOrder>> orderListResponse = orderService.getOrders(userId);
+
 
         List<ResponseOrder> orderList = orderListResponse.getBody();
         userDto.setOrders(orderList);

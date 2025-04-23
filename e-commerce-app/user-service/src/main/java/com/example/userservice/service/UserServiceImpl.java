@@ -1,6 +1,7 @@
 package com.example.userservice.service;
 
 import com.example.userservice.dto.UserDto;
+import com.example.userservice.error.FeignErrorDecoder;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -83,12 +81,15 @@ public class UserServiceImpl implements UserService {
         //                 });
 
         /* Feign exception handling */
-        List<ResponseOrder> orderList = null;
-        try {
-            orderList = orderService.getOrders(userId);
-        } catch (FeignException e) {
-            log.error(e.getMessage());
-        }
+        // List<ResponseOrder> orderList = null;
+        // try {
+        //     orderList = orderService.getOrders(userId);
+        // } catch (FeignException e) {
+        //     log.error(e.getMessage());
+        // }
+
+        /* ErrorDecoder */
+        List<ResponseOrder> orderList = orderService.getOrders(userId);
 
         userDto.setOrders(orderList);
 
